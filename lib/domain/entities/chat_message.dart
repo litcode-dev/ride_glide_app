@@ -13,4 +13,23 @@ class ChatMessage {
     required this.isFromDriver,
     required this.sentAt,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ChatMessage &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          conversationId == other.conversationId &&
+          body == other.body &&
+          isFromDriver == other.isFromDriver &&
+          sentAt == other.sentAt;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      conversationId.hashCode ^
+      body.hashCode ^
+      isFromDriver.hashCode ^
+      sentAt.hashCode;
 }

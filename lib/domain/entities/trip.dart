@@ -28,4 +28,35 @@ class Trip {
     this.rating,
     required this.status,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Trip &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          destination == other.destination &&
+          originAddress == other.originAddress &&
+          driverName == other.driverName &&
+          driverAvatarHue == other.driverAvatarHue &&
+          rideType == other.rideType &&
+          price == other.price &&
+          date == other.date &&
+          durationMinutes == other.durationMinutes &&
+          rating == other.rating &&
+          status == other.status;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      destination.hashCode ^
+      originAddress.hashCode ^
+      driverName.hashCode ^
+      driverAvatarHue.hashCode ^
+      rideType.hashCode ^
+      price.hashCode ^
+      date.hashCode ^
+      durationMinutes.hashCode ^
+      rating.hashCode ^
+      status.hashCode;
 }

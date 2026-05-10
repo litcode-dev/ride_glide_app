@@ -17,4 +17,27 @@ class ChatConversation {
     required this.unreadCount,
     required this.tripId,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ChatConversation &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          driverName == other.driverName &&
+          driverAvatarHue == other.driverAvatarHue &&
+          lastMessage == other.lastMessage &&
+          lastMessageTime == other.lastMessageTime &&
+          unreadCount == other.unreadCount &&
+          tripId == other.tripId;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      driverName.hashCode ^
+      driverAvatarHue.hashCode ^
+      lastMessage.hashCode ^
+      lastMessageTime.hashCode ^
+      unreadCount.hashCode ^
+      tripId.hashCode;
 }
