@@ -7,6 +7,7 @@ import '../cubits/choose_ride_cubit.dart';
 import '../theme/glide_tokens.dart';
 import '../widgets/common_widgets.dart';
 import '../widgets/map_background.dart';
+import '../widgets/tap_scale.dart';
 
 class ChoosePage extends StatelessWidget {
   const ChoosePage({super.key});
@@ -20,8 +21,15 @@ class ChoosePage extends StatelessWidget {
   }
 }
 
-class _ChooseView extends StatelessWidget {
+class _ChooseView extends StatefulWidget {
   const _ChooseView();
+
+  @override
+  State<_ChooseView> createState() => _ChooseViewState();
+}
+
+class _ChooseViewState extends State<_ChooseView> {
+  bool _confirming = false;
 
   @override
   Widget build(BuildContext context) {
@@ -178,32 +186,40 @@ class _ChooseView extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        GestureDetector(
-                          onTap: () => appCubit.goTo(AppScreen.searching),
-                          child: Container(
-                            height: 50,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: t.accent,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: t.accent.withValues(alpha: 0.40),
-                                  blurRadius: 16,
-                                  offset: const Offset(0, 6),
+                        TapScale(
+                          onTap: _confirming
+                              ? null
+                              : () async {
+                                  setState(() => _confirming = true);
+                                  await Future.delayed(const Duration(milliseconds: 150));
+                                  if (mounted) appCubit.goTo(AppScreen.searching);
+                                },
+                          child: AnimatedOpacity(
+                            opacity: _confirming ? 0.6 : 1.0,
+                            duration: const Duration(milliseconds: 100),
+                            child: Container(
+                              height: 50,
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: t.accent,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: t.accent.withValues(alpha: 0.40),
+                                    blurRadius: 16,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                chooseState.options.isEmpty
+                                    ? 'Confirm'
+                                    : 'Confirm ${chooseState.options[chooseState.selectedIndex].name}',
+                                style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w800,
+                                  color: t.accentInk, letterSpacing: -0.2,
                                 ),
-                              ],
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              chooseState.options.isEmpty
-                                  ? 'Confirm'
-                                  : 'Confirm ${chooseState.options[chooseState.selectedIndex].name}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800,
-                                color: t.accentInk,
-                                letterSpacing: -0.2,
                               ),
                             ),
                           ),

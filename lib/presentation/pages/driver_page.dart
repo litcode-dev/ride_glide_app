@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../injection_container.dart' as di;
 import '../cubits/app_cubit.dart';
 import '../cubits/driver_cubit.dart';
 import '../theme/glide_tokens.dart';
 import '../widgets/common_widgets.dart';
+import '../widgets/glide_toast.dart';
 import '../widgets/map_background.dart';
+import '../widgets/safety_sheet.dart';
+import '../widgets/tap_scale.dart';
 
 class DriverPage extends StatelessWidget {
   const DriverPage({super.key});
@@ -19,8 +23,30 @@ class DriverPage extends StatelessWidget {
   }
 }
 
-class _DriverView extends StatelessWidget {
+class _DriverView extends StatefulWidget {
   const _DriverView();
+
+  @override
+  State<_DriverView> createState() => _DriverViewState();
+}
+
+class _DriverViewState extends State<_DriverView> with SingleTickerProviderStateMixin {
+  late final AnimationController _progress;
+
+  @override
+  void initState() {
+    super.initState();
+    _progress = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    )..animateTo(0.72, curve: Curves.easeOut);
+  }
+
+  @override
+  void dispose() {
+    _progress.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,9 +205,12 @@ class _DriverView extends StatelessWidget {
                       color: t.hair,
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: FractionallySizedBox(
-                          widthFactor: 0.72,
-                          child: Container(color: t.accent),
+                        child: AnimatedBuilder(
+                          animation: _progress,
+                          builder: (context, _) => FractionallySizedBox(
+                            widthFactor: _progress.value,
+                            child: Container(color: t.accent),
+                          ),
                         ),
                       ),
                     ),
@@ -285,16 +314,37 @@ class _DriverView extends StatelessWidget {
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      MiniButton(icon: Icons.verified_user_outlined, label: 'Safety', tokens: t),
+                      TapScale(
+                        onTap: () => showSafetySheet(context, t),
+                        child: _MiniButtonContent(
+                          icon: Icons.verified_user_outlined,
+                          label: 'Safety',
+                          tokens: t,
+                        ),
+                      ),
                       const SizedBox(width: 8),
-                      MiniButton(icon: Icons.ios_share_rounded, label: 'Share trip', tokens: t),
+                      TapScale(
+                        onTap: () {
+                          Clipboard.setData(const ClipboardData(
+                            text: 'https://glide.app/track/abc123',
+                          ));
+                          showGlideToast(context, 'Trip link copied', t);
+                        },
+                        child: _MiniButtonContent(
+                          icon: Icons.ios_share_rounded,
+                          label: 'Share trip',
+                          tokens: t,
+                        ),
+                      ),
                       const SizedBox(width: 8),
-                      MiniButton(
-                        icon: Icons.close_rounded,
-                        label: 'Cancel',
-                        tokens: t,
+                      TapScale(
                         onTap: () => appCubit.goTo(AppScreen.home),
-                        isCancel: true,
+                        child: _MiniButtonContent(
+                          icon: Icons.close_rounded,
+                          label: 'Cancel',
+                          tokens: t,
+                          isCancel: true,
+                        ),
                       ),
                     ],
                   ),
@@ -303,6 +353,50 @@ class _DriverView extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _MiniButtonContent extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final GlideTokens tokens;
+  final bool isCancel;
+
+  const _MiniButtonContent({
+    required this.icon,
+    required this.label,
+    required this.tokens,
+    this.isCancel = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = tokens;
+    return Expanded(
+      child: Container(
+        height: 44,
+        decoration: BoxDecoration(
+          color: isCancel ? t.cancelBg : t.card,
+          borderRadius: BorderRadius.circular(14),
+          border: isCancel ? null : Border.all(color: t.hair, width: 1),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: isCancel ? t.cancelInk : t.ink, size: 16),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: isCancel ? t.cancelInk : t.ink,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
