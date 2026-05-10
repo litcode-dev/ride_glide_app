@@ -4,6 +4,8 @@ import '../cubits/app_cubit.dart';
 import '../theme/glide_tokens.dart';
 import '../widgets/common_widgets.dart';
 import '../widgets/map_background.dart';
+import '../widgets/tap_scale.dart';
+import '../widgets/top_up_sheet.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -73,11 +75,17 @@ class HomePage extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text('balance', style: TextStyle(fontSize: 13, color: t.muted)),
                         const Spacer(),
-                        Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: t.accent),
-                          child: const Icon(Icons.add_rounded, color: kAccentInk, size: 16),
+                        TapScale(
+                          onTap: () => showTopUpSheet(context, t),
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: t.accent,
+                            ),
+                            child: const Icon(Icons.add_rounded, color: kAccentInk, size: 16),
+                          ),
                         ),
                       ],
                     ),
@@ -247,6 +255,9 @@ class HomePage extends StatelessWidget {
               tokens: t,
               onHome: () {},
               onSettings: () => appCubit.goTo(AppScreen.account),
+              onTrips: () => appCubit.goTo(AppScreen.trips),
+              onChat: () => appCubit.goTo(AppScreen.chatInbox),
+              isRideActive: state.isRideActive,
             ),
           ),
         ],

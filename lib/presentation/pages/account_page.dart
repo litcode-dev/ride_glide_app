@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../injection_container.dart' as di;
 import '../cubits/account_cubit.dart';
 import '../cubits/app_cubit.dart';
 import '../theme/glide_tokens.dart';
 import '../widgets/common_widgets.dart';
+import '../widgets/tap_scale.dart';
+import '../widgets/top_up_sheet.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -193,8 +196,8 @@ class _AccountView extends StatelessWidget {
                                 ],
                               ),
                               const Spacer(),
-                              GestureDetector(
-                                onTap: () {},
+                              TapScale(
+                                onTap: () => showTopUpSheet(context, t),
                                 child: Container(
                                   height: 36,
                                   padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -206,9 +209,7 @@ class _AccountView extends StatelessWidget {
                                   child: Text(
                                     'Top up',
                                     style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                      color: t.accentInk,
+                                      fontSize: 13, fontWeight: FontWeight.w700, color: t.accentInk,
                                     ),
                                   ),
                                 ),
@@ -318,6 +319,10 @@ class _AccountView extends StatelessWidget {
               active: 'settings',
               tokens: t,
               onHome: () => appCubit.goTo(AppScreen.home),
+              onSettings: () {},
+              onTrips: () => appCubit.goTo(AppScreen.trips),
+              onChat: () => appCubit.goTo(AppScreen.chatInbox),
+              isRideActive: appState.isRideActive,
             ),
           ),
         ],
@@ -342,33 +347,33 @@ class _SettingsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = tokens;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        border: showDivider ? Border(top: BorderSide(color: t.hair)) : null,
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(color: t.subtle, borderRadius: BorderRadius.circular(12)),
-            child: Icon(icon, color: t.ink, size: 18),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: t.ink,
-                letterSpacing: -0.2,
+    return TapScale(
+      onTap: () => HapticFeedback.selectionClick(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          border: showDivider ? Border(top: BorderSide(color: t.hair)) : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 36, height: 36,
+              decoration: BoxDecoration(color: t.subtle, borderRadius: BorderRadius.circular(12)),
+              child: Icon(icon, color: t.ink, size: 18),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 15, fontWeight: FontWeight.w600,
+                  color: t.ink, letterSpacing: -0.2,
+                ),
               ),
             ),
-          ),
-          Text('›', style: TextStyle(fontSize: 18, color: t.muted)),
-        ],
+            Text('›', style: TextStyle(fontSize: 18, color: t.muted)),
+          ],
+        ),
       ),
     );
   }
