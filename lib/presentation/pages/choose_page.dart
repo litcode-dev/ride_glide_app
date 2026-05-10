@@ -218,7 +218,7 @@ class _ChooseViewState extends State<_ChooseView> {
                                     ? 'Confirm'
                                     : 'Confirm ${chooseState.options[chooseState.selectedIndex].name}',
                                 style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w800,
+                                  fontSize: 14, fontWeight: FontWeight.w600,
                                   color: t.accentInk, letterSpacing: -0.2,
                                 ),
                               ),
@@ -286,7 +286,7 @@ class _RideTile extends StatelessWidget {
                         ride.name,
                         style: TextStyle(
                           fontSize: 15,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w500,
                           color: t.ink,
                           letterSpacing: -0.2,
                         ),
@@ -327,7 +327,7 @@ class _RideTile extends StatelessWidget {
                   '₦${ride.price.toStringAsFixed(2)}',
                   style: TextStyle(
                     fontSize: 15,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
                     color: t.ink,
                     letterSpacing: -0.2,
                   ),

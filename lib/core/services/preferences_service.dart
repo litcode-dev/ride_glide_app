@@ -7,7 +7,7 @@ class PreferencesService {
   final SharedPreferences _prefs;
   PreferencesService(this._prefs);
 
-  bool get darkMode              => _prefs.getBool(_kDarkMode)              ?? false;
+  bool get darkMode              => _prefs.getBool(_kDarkMode)              ?? true;
   bool get discountNotifications => _prefs.getBool(_kDiscountNotifications) ?? true;
 
   Future<void> setDarkMode(bool v)              => _prefs.setBool(_kDarkMode, v);
