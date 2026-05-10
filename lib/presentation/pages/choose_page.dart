@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../domain/entities/ride_option.dart';
 import '../../injection_container.dart' as di;
 import '../cubits/app_cubit.dart';
@@ -169,7 +170,7 @@ class _ChooseViewState extends State<_ChooseView> {
                             padding: const EdgeInsets.symmetric(horizontal: 14),
                             child: Row(
                               children: [
-                                Icon(Icons.credit_card_outlined, color: t.ink, size: 18),
+                                Icon(LucideIcons.creditCard, color: t.ink, size: 18),
                                 const SizedBox(width: 10),
                                 Text(
                                   'Visa · 4242',
@@ -272,7 +273,7 @@ class _RideTile extends StatelessWidget {
                 color: selected ? t.accent : t.subtle,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(Icons.local_taxi_rounded, color: t.ink, size: 26),
+              child: Icon(LucideIcons.carFront, color: t.ink, size: 26),
             ),
             const SizedBox(width: 14),
             Expanded(

@@ -1,5 +1,6 @@
 // lib/presentation/widgets/safety_sheet.dart
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/glide_tokens.dart';
 import '../widgets/common_widgets.dart';
 
@@ -47,7 +48,7 @@ class _SafetySheet extends StatelessWidget {
                   color: t.cancelBg,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(Icons.verified_user_outlined, color: t.cancelInk, size: 18),
+                child: Icon(LucideIcons.shieldCheck, color: t.cancelInk, size: 18),
               ),
               const SizedBox(width: 12),
               Text(
@@ -96,7 +97,7 @@ class _SafetySheet extends StatelessWidget {
                       ),
                     ),
                     GlideIconPill(
-                      icon: Icons.phone_rounded,
+                      icon: LucideIcons.phone,
                       tokens: t,
                       bgColor: t.accent,
                       iconColor: t.accentInk,

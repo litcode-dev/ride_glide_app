@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../cubits/app_cubit.dart';
 import '../theme/glide_tokens.dart';
 import '../widgets/common_widgets.dart';
@@ -61,7 +62,7 @@ class HomePage extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 14, right: 6),
                     child: Row(
                       children: [
-                        Icon(Icons.credit_card_outlined, color: t.ink, size: 18),
+                        Icon(LucideIcons.creditCard, color: t.ink, size: 18),
                         const SizedBox(width: 8),
                         Text(
                           '\$29',
@@ -84,7 +85,7 @@ class HomePage extends StatelessWidget {
                               shape: BoxShape.circle,
                               color: t.accent,
                             ),
-                            child: const Icon(Icons.add_rounded, color: kAccentInk, size: 16),
+                            child: const Icon(LucideIcons.plus, color: kAccentInk, size: 16),
                           ),
                         ),
                       ],
@@ -100,7 +101,7 @@ class HomePage extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: t.shadowSm,
                   ),
-                  child: Icon(Icons.search_rounded, color: t.ink, size: 20),
+                  child: Icon(LucideIcons.search, color: t.ink, size: 20),
                 ),
               ],
             ),
@@ -132,7 +133,7 @@ class HomePage extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: t.shadowSm,
                   ),
-                  child: Icon(Icons.local_taxi_rounded, color: t.ink, size: 20),
+                  child: Icon(LucideIcons.carFront, color: t.ink, size: 20),
                 ),
               ],
             ),

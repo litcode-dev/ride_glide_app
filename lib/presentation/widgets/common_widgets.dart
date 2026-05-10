@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/glide_tokens.dart';
 
 // ── Avatar ─────────────────────────────────────────────────────────────────
@@ -138,7 +139,7 @@ class _GlideFABState extends State<GlideFAB> with SingleTickerProviderStateMixin
             const BoxShadow(color: Color(0x1F000000), blurRadius: 10, offset: Offset(0, 4)),
           ],
         ),
-        child: const Icon(Icons.local_taxi_rounded, color: kAccentInk, size: 26),
+        child: const Icon(LucideIcons.carFront, color: kAccentInk, size: 26),
       ),
     );
   }
@@ -198,15 +199,14 @@ class GlideTabBar extends StatelessWidget {
             child: Row(
               children: [
                 _TabItem(
-                  icon: Icons.home_outlined,
-                  activeIcon: Icons.home_rounded,
+                  icon: LucideIcons.house,
                   label: 'Home',
                   active: active == 'home',
                   tokens: tokens,
                   onTap: onHome,
                 ),
                 _TabItem(
-                  icon: Icons.access_time_rounded,
+                  icon: LucideIcons.history,
                   label: 'Trips',
                   active: active == 'history',
                   tokens: tokens,
@@ -214,15 +214,14 @@ class GlideTabBar extends StatelessWidget {
                 ),
                 Expanded(flex: 6, child: const SizedBox()),
                 _TabItem(
-                  icon: Icons.chat_bubble_outline_rounded,
+                  icon: LucideIcons.messageCircle,
                   label: 'Chat',
                   active: active == 'chat',
                   tokens: tokens,
                   onTap: onChat,
                 ),
                 _TabItem(
-                  icon: Icons.settings_outlined,
-                  activeIcon: Icons.settings_rounded,
+                  icon: LucideIcons.user,
                   label: 'Account',
                   active: active == 'settings',
                   tokens: tokens,
@@ -240,7 +239,6 @@ class GlideTabBar extends StatelessWidget {
 
 class _TabItem extends StatelessWidget {
   final IconData icon;
-  final IconData? activeIcon;
   final String label;
   final bool active;
   final GlideTokens tokens;
@@ -248,7 +246,6 @@ class _TabItem extends StatelessWidget {
 
   const _TabItem({
     required this.icon,
-    this.activeIcon,
     required this.label,
     required this.active,
     required this.tokens,
@@ -266,7 +263,7 @@ class _TabItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(active ? (activeIcon ?? icon) : icon, color: color, size: 22),
+            Icon(icon, color: color, size: 22),
             const SizedBox(height: 3),
             Text(
               label,
@@ -302,7 +299,7 @@ class GlideBackButton extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: tokens.shadowSm,
         ),
-        child: Icon(Icons.arrow_back_ios_new_rounded, color: tokens.ink, size: 16),
+        child: Icon(LucideIcons.chevronLeft, color: tokens.ink, size: 20),
       ),
     );
   }
@@ -410,7 +407,7 @@ class StarRating extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.star_rounded, color: kAccentDeep, size: 13),
+        const Icon(LucideIcons.star, color: kAccentDeep, size: 13),
         const SizedBox(width: 3),
         Text(
           label,

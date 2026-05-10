@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../domain/entities/location.dart';
 import '../../injection_container.dart' as di;
 import '../cubits/app_cubit.dart';
@@ -24,11 +25,11 @@ class _WhereToView extends StatelessWidget {
 
   static IconData _iconFor(LocationType type) {
     return switch (type) {
-      LocationType.home => Icons.home_outlined,
-      LocationType.work => Icons.shield_outlined,
-      LocationType.landmark => Icons.my_location_rounded,
-      LocationType.transit => Icons.location_on_outlined,
-      LocationType.airport => Icons.local_taxi_rounded,
+      LocationType.home => LucideIcons.house,
+      LocationType.work => LucideIcons.briefcase,
+      LocationType.landmark => LucideIcons.mapPin,
+      LocationType.transit => LucideIcons.navigation2,
+      LocationType.airport => LucideIcons.plane,
     };
   }
 

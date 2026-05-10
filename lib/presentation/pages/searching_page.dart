@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/app_cubit.dart';
 import '../theme/glide_tokens.dart';
@@ -100,7 +101,7 @@ class _SearchingPageState extends State<SearchingPage> with TickerProviderStateM
                       BoxShadow(color: t.accent.withValues(alpha: 0.10), blurRadius: 0, spreadRadius: 16),
                     ],
                   ),
-                  child: const Icon(Icons.local_taxi_rounded, color: kAccentInk, size: 26),
+                  child: const Icon(LucideIcons.carFront, color: kAccentInk, size: 26),
                 ),
                 const SizedBox(height: 14),
                 Text(
@@ -144,7 +145,7 @@ class _SearchingPageState extends State<SearchingPage> with TickerProviderStateM
                       shape: BoxShape.circle,
                       boxShadow: t.shadowMd,
                     ),
-                    child: Icon(Icons.local_taxi_rounded, color: t.ink, size: 30),
+                    child: Icon(LucideIcons.carFront, color: t.ink, size: 30),
                   ),
                   Positioned(
                     left: 30,
@@ -238,7 +239,7 @@ class _SearchingPageState extends State<SearchingPage> with TickerProviderStateM
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(color: t.hair, shape: BoxShape.circle),
-                      child: Icon(Icons.close_rounded, color: t.ink, size: 18),
+                      child: Icon(LucideIcons.x, color: t.ink, size: 18),
                     ),
                   ),
                   Expanded(

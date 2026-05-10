@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../injection_container.dart' as di;
 import '../cubits/account_cubit.dart';
 import '../cubits/app_cubit.dart';
@@ -35,10 +36,10 @@ class _AccountView extends StatelessWidget {
     final profile = accountState.profile;
 
     final rows = [
-      (icon: Icons.my_location_rounded, label: 'Location'),
-      (icon: Icons.credit_card_outlined, label: 'Payment'),
-      (icon: Icons.info_outline, label: 'Information'),
-      (icon: Icons.shield_outlined, label: 'Security'),
+      (icon: LucideIcons.mapPin, label: 'Location'),
+      (icon: LucideIcons.creditCard, label: 'Payment'),
+      (icon: LucideIcons.info, label: 'Information'),
+      (icon: LucideIcons.shield, label: 'Security'),
     ];
 
     return Container(
@@ -117,7 +118,7 @@ class _AccountView extends StatelessWidget {
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.star_rounded, color: kAccentDeep, size: 12),
+                                  const Icon(LucideIcons.star, color: kAccentDeep, size: 12),
                                   const SizedBox(width: 4),
                                   Text(
                                     profile != null ? profile.rating.toStringAsFixed(2) : '4.95',
@@ -246,7 +247,7 @@ class _AccountView extends StatelessWidget {
                                   color: t.subtle,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Icon(Icons.local_offer_outlined, color: t.ink, size: 18),
+                                child: Icon(LucideIcons.tag, color: t.ink, size: 18),
                               ),
                               const SizedBox(width: 14),
                               Expanded(
@@ -277,9 +278,7 @@ class _AccountView extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Icon(
-                                  appState.darkMode
-                                      ? Icons.light_mode_rounded
-                                      : Icons.dark_mode_rounded,
+                                  appState.darkMode ? LucideIcons.sun : LucideIcons.moon,
                                   color: t.ink,
                                   size: 18,
                                 ),

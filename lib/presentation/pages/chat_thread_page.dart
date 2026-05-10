@@ -1,6 +1,7 @@
 // lib/presentation/pages/chat_thread_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/chat_message.dart';
@@ -85,7 +86,7 @@ class _ChatThreadPageState extends State<ChatThreadPage> {
                   ),
                 ),
                 GlideIconPill(
-                  icon: Icons.phone_rounded,
+                  icon: LucideIcons.phone,
                   tokens: t,
                   bgColor: t.accent,
                   iconColor: t.accentInk,
@@ -186,7 +187,7 @@ class _ChatThreadPageState extends State<ChatThreadPage> {
                             ),
                           ],
                         ),
-                        child: Icon(Icons.send_rounded, color: t.accentInk, size: 18),
+                        child: Icon(LucideIcons.sendHorizontal, color: t.accentInk, size: 18),
                       ),
                     ),
                   ],

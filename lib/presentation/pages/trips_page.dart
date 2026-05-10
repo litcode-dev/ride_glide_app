@@ -1,6 +1,7 @@
 // lib/presentation/pages/trips_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/trip.dart';
 import '../../injection_container.dart' as di;
@@ -210,10 +211,10 @@ class _TripRow extends StatelessWidget {
   });
 
   IconData get _rideIcon => switch (trip.rideType) {
-        RideType.xl => Icons.airport_shuttle_rounded,
-        RideType.lux => Icons.star_rounded,
-        RideType.eco => Icons.eco_rounded,
-        _ => Icons.local_taxi_rounded,
+        RideType.xl => LucideIcons.bus,
+        RideType.lux => LucideIcons.star,
+        RideType.eco => LucideIcons.leaf,
+        _ => LucideIcons.carFront,
       };
 
   @override
@@ -309,7 +310,7 @@ class _TripRow extends StatelessWidget {
                         ],
                         const SizedBox(height: 4),
                         Icon(
-                          expanded ? Icons.keyboard_arrow_up_rounded : Icons.chevron_right_rounded,
+                          expanded ? LucideIcons.chevronUp : LucideIcons.chevronRight,
                           color: t.muted, size: 18,
                         ),
                       ],

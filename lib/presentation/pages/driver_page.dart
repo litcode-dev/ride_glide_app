@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../injection_container.dart' as di;
 import '../cubits/app_cubit.dart';
 import '../cubits/driver_cubit.dart';
@@ -90,7 +91,7 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                     shape: BoxShape.circle,
                     boxShadow: t.shadowSm,
                   ),
-                  child: Icon(Icons.local_taxi_rounded, color: t.ink, size: 20),
+                  child: Icon(LucideIcons.carFront, color: t.ink, size: 20),
                 ),
               ],
             ),
@@ -241,10 +242,10 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                           ],
                         ),
                       ),
-                      GlideIconPill(icon: Icons.chat_bubble_outline_rounded, tokens: t),
+                      GlideIconPill(icon: LucideIcons.messageCircle, tokens: t),
                       const SizedBox(width: 8),
                       GlideIconPill(
-                        icon: Icons.phone_rounded,
+                        icon: LucideIcons.phone,
                         tokens: t,
                         bgColor: t.accent,
                         iconColor: t.accentInk,
@@ -268,7 +269,7 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                             color: t.card,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(Icons.local_taxi_rounded, color: t.ink, size: 22),
+                          child: Icon(LucideIcons.carFront, color: t.ink, size: 22),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -317,7 +318,7 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                       TapScale(
                         onTap: () => showSafetySheet(context, t),
                         child: _MiniButtonContent(
-                          icon: Icons.verified_user_outlined,
+                          icon: LucideIcons.shieldCheck,
                           label: 'Safety',
                           tokens: t,
                         ),
@@ -331,7 +332,7 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                           showGlideToast(context, 'Trip link copied', t);
                         },
                         child: _MiniButtonContent(
-                          icon: Icons.ios_share_rounded,
+                          icon: LucideIcons.share2,
                           label: 'Share trip',
                           tokens: t,
                         ),
@@ -340,7 +341,7 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                       TapScale(
                         onTap: () => appCubit.goTo(AppScreen.home),
                         child: _MiniButtonContent(
-                          icon: Icons.close_rounded,
+                          icon: LucideIcons.x,
                           label: 'Cancel',
                           tokens: t,
                           isCancel: true,
