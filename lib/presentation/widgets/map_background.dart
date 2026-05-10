@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/glide_tokens.dart';
 
-class MapBackground extends StatelessWidget {
+class MapBackground extends StatefulWidget {
   final bool dark;
   final bool route;
 
   const MapBackground({super.key, this.dark = false, this.route = false});
 
-  // Lagos, Nigeria – Lagos Island / Victoria Island area
-  static const _center    = LatLng(6.4420, 3.4080);
-  static const _pickup    = LatLng(6.4220, 3.3920);
-  static const _carPos    = LatLng(6.4360, 3.4040);
-  static const _dest      = LatLng(6.4600, 3.4260);
-  static const _userPos   = LatLng(6.4420, 3.4080);
+  @override
+  State<MapBackground> createState() => _MapBackgroundState();
+}
+
+class _MapBackgroundState extends State<MapBackground> {
+  // Lagos fallback
+  static const _fallback = LatLng(6.4420, 3.4080);
+
+  static const _pickup  = LatLng(6.4220, 3.3920);
+  static const _carPos  = LatLng(6.4360, 3.4040);
+  static const _dest    = LatLng(6.4600, 3.4260);
 
   static const _routePoints = [
     LatLng(6.4220, 3.3920),
@@ -27,27 +33,73 @@ class MapBackground extends StatelessWidget {
     LatLng(6.4600, 3.4260),
   ];
 
-  // Scattered nearby cars for the home screen
-  static const _nearbyCars = [
-    LatLng(6.4460, 3.4010),
-    LatLng(6.4390, 3.4160),
-    LatLng(6.4480, 3.3960),
-    LatLng(6.4340, 3.4120),
-  ];
+  LatLng _userPos = _fallback;
+  bool _located = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLocation();
+  }
+
+  Future<void> _fetchLocation() async {
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return;
+      }
+
+      final pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+      );
+      // Only use detected position if it's within Nigeria's bounding box
+      // (lat 4–14 °N, lng 3–15 °E) to avoid the iOS simulator San Francisco default
+      final inNigeria = pos.latitude >= 4 && pos.latitude <= 14 &&
+          pos.longitude >= 3 && pos.longitude <= 15;
+      if (mounted && inNigeria) {
+        setState(() {
+          _userPos = LatLng(pos.latitude, pos.longitude);
+          _located = true;
+        });
+      }
+    } catch (_) {
+      // Stay on fallback — no crash
+    }
+  }
+
+  List<LatLng> get _nearbyCars {
+    final lat = _userPos.latitude;
+    final lng = _userPos.longitude;
+    return [
+      LatLng(lat + 0.004, lng - 0.007),
+      LatLng(lat - 0.003, lng + 0.008),
+      LatLng(lat + 0.006, lng - 0.002),
+      LatLng(lat - 0.005, lng - 0.004),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    final tileUrl = dark
+    final tileUrl = widget.dark
         ? 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
         : 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
 
+    final center = widget.route ? const LatLng(6.4400, 3.4090) : _userPos;
+
     return FlutterMap(
-      key: ValueKey('map-$dark'),
+      key: ValueKey('map-${widget.dark}-$_located'),
       options: MapOptions(
-        initialCenter: route ? const LatLng(6.4400, 3.4090) : _center,
-        initialZoom: route ? 13.8 : 14.2,
+        initialCenter: center,
+        initialZoom: widget.route ? 13.8 : 14.2,
         interactionOptions: const InteractionOptions(
-          flags: InteractiveFlag.none,
+          flags: InteractiveFlag.drag |
+              InteractiveFlag.pinchZoom |
+              InteractiveFlag.doubleTapZoom |
+              InteractiveFlag.flingAnimation,
         ),
       ),
       children: [
@@ -58,8 +110,7 @@ class MapBackground extends StatelessWidget {
           tileProvider: NetworkTileProvider(),
         ),
 
-        if (!route) ...[
-          // Home screen: user location dot + nearby cars
+        if (!widget.route) ...[
           MarkerLayer(markers: [
             Marker(
               point: _userPos,
@@ -76,15 +127,13 @@ class MapBackground extends StatelessWidget {
           ]),
         ],
 
-        if (route) ...[
+        if (widget.route) ...[
           PolylineLayer(polylines: [
-            // Halo
             Polyline(
               points: _routePoints,
               strokeWidth: 18,
               color: Colors.black.withValues(alpha: 0.09),
             ),
-            // Main route line with white border highlight
             Polyline(
               points: _routePoints,
               strokeWidth: 7,
@@ -96,24 +145,9 @@ class MapBackground extends StatelessWidget {
             ),
           ]),
           MarkerLayer(markers: [
-            Marker(
-              point: _pickup,
-              width: 28,
-              height: 28,
-              child: _PickupMarker(),
-            ),
-            Marker(
-              point: _carPos,
-              width: 40,
-              height: 40,
-              child: _CarMarker(),
-            ),
-            Marker(
-              point: _dest,
-              width: 28,
-              height: 28,
-              child: _DestMarker(),
-            ),
+            Marker(point: _pickup, width: 28, height: 28, child: _PickupMarker()),
+            Marker(point: _carPos, width: 40, height: 40, child: _CarMarker()),
+            Marker(point: _dest,   width: 28, height: 28, child: _DestMarker()),
           ]),
         ],
       ],

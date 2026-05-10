@@ -49,7 +49,10 @@ class HomePage extends StatelessWidget {
             right: 16,
             child: Row(
               children: [
-                GlideAvatar(size: 44, hue: 22, cardColor: t.card),
+                GestureDetector(
+                  onTap: () => appCubit.goTo(AppScreen.profile),
+                  child: GlideAvatar(size: 44, hue: 22, cardColor: t.card),
+                ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Container(
@@ -93,47 +96,18 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: t.card,
-                    shape: BoxShape.circle,
-                    boxShadow: t.shadowSm,
+                GestureDetector(
+                  onTap: () => appCubit.goTo(AppScreen.search),
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: t.card,
+                      shape: BoxShape.circle,
+                      boxShadow: t.shadowSm,
+                    ),
+                    child: Icon(LucideIcons.search, color: t.ink, size: 20),
                   ),
-                  child: Icon(LucideIcons.search, color: t.ink, size: 20),
-                ),
-              ],
-            ),
-          ),
-
-          Positioned(
-            left: size.width * 0.52,
-            top: size.height * 0.30,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: t.accent,
-                    borderRadius: BorderRadius.circular(999),
-                    boxShadow: [BoxShadow(color: t.accent.withValues(alpha: 0.40), blurRadius: 12)],
-                  ),
-                  child: Text(
-                    '3 min',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: t.accentInk),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: t.card,
-                    shape: BoxShape.circle,
-                    boxShadow: t.shadowSm,
-                  ),
-                  child: Icon(LucideIcons.carFront, color: t.ink, size: 20),
                 ),
               ],
             ),
@@ -202,13 +176,16 @@ class HomePage extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            Text(
-                              'Where are you?',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: t.ink,
-                                letterSpacing: -0.3,
+                            GestureDetector(
+                              onTap: () => appCubit.goToWhereTo(focusPickup: true),
+                              child: Text(
+                                state.pickupAddress ?? 'Where are you?',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: state.pickupAddress != null ? t.ink : t.muted,
+                                  letterSpacing: -0.3,
+                                ),
                               ),
                             ),
                             Container(
@@ -226,7 +203,7 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () => appCubit.goTo(AppScreen.whereTo),
+                              onTap: () => appCubit.goToWhereTo(focusPickup: false),
                               child: Text(
                                 'Where you want to go?',
                                 style: TextStyle(

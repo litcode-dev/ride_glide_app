@@ -47,6 +47,10 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Glide needs your location to show you nearby drivers and set your pickup point.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Glide needs your location to show you nearby drivers and set your pickup point.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

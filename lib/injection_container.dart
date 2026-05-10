@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'core/services/preferences_service.dart';
 import 'data/datasources/local/chat_local_datasource.dart';
 import 'data/datasources/local/driver_local_datasource.dart';
 import 'data/datasources/local/location_local_datasource.dart';
@@ -36,8 +38,13 @@ import 'presentation/cubits/where_to_cubit.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // External
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerSingleton<SharedPreferences>(sharedPreferences);
+  sl.registerLazySingleton<PreferencesService>(() => PreferencesService(sl()));
+
   // Cubits — AppCubit is a singleton (owns navigation state)
-  sl.registerLazySingleton(() => AppCubit());
+  sl.registerLazySingleton(() => AppCubit(sl()));
   sl.registerFactory(() => ChooseRideCubit(sl()));
   sl.registerFactory(() => WhereToCubit(sl()));
   sl.registerFactory(() => DriverCubit(sl()));

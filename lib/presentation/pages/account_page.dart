@@ -85,7 +85,9 @@ class _AccountView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
+                        GestureDetector(
+                          onTap: () => appCubit.goTo(AppScreen.profile),
+                          child: Row(
                           children: [
                             GlideAvatar(size: 62, hue: profile?.avatarHue ?? 22, cardColor: t.card),
                             const SizedBox(width: 14),
@@ -132,6 +134,7 @@ class _AccountView extends StatelessWidget {
                               ),
                             ),
                           ],
+                        ),
                         ),
                         const SizedBox(height: 16),
                         Container(

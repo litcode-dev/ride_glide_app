@@ -273,7 +273,7 @@ class _RideTile extends StatelessWidget {
                 color: selected ? t.accent : t.subtle,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(LucideIcons.carFront, color: t.ink, size: 26),
+              child: Icon(LucideIcons.carFront, color: selected ? kAccentInk : t.ink, size: 26),
             ),
             const SizedBox(width: 14),
             Expanded(

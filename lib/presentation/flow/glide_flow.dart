@@ -12,6 +12,8 @@ import '../pages/chat_thread_page.dart';
 import '../pages/choose_page.dart';
 import '../pages/driver_page.dart';
 import '../pages/home_page.dart';
+import '../pages/profile_page.dart';
+import '../pages/search_page.dart';
 import '../pages/searching_page.dart';
 import '../pages/trips_page.dart';
 import '../pages/where_to_page.dart';
@@ -47,6 +49,8 @@ class GlideFlow extends StatelessWidget {
               child: const ChatThreadPage(),
             ),
           AppScreen.call => const CallPage(key: ValueKey('call')),
+          AppScreen.profile => const ProfilePage(key: ValueKey('profile')),
+          AppScreen.search => const SearchPage(key: ValueKey('search')),
           AppScreen.home => const HomePage(key: ValueKey('home')),
         };
 

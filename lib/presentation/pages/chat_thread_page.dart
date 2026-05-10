@@ -72,19 +72,25 @@ class _ChatThreadPageState extends State<ChatThreadPage> {
                   tokens: t,
                 ),
                 const SizedBox(width: 12),
-                if (conv != null) ...[
-                  GlideAvatar(size: 34, hue: conv.driverAvatarHue, cardColor: t.card),
-                  const SizedBox(width: 8),
-                ],
-                Expanded(
-                  child: Text(
-                    conv?.driverName ?? 'Driver',
-                    style: TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w700,
-                      color: t.ink, letterSpacing: -0.3,
-                    ),
+                GestureDetector(
+                  onTap: conv != null ? () => appCubit.goTo(AppScreen.driver) : null,
+                  child: Row(
+                    children: [
+                      if (conv != null) ...[
+                        GlideAvatar(size: 34, hue: conv.driverAvatarHue, cardColor: t.card),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(
+                        conv?.driverName ?? 'Driver',
+                        style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w700,
+                          color: t.ink, letterSpacing: -0.3,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                const Spacer(),
                 GlideIconPill(
                   icon: LucideIcons.phone,
                   tokens: t,
