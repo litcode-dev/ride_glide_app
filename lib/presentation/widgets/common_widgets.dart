@@ -75,26 +75,71 @@ class GlideAvatar extends StatelessWidget {
 }
 
 // ── FAB ────────────────────────────────────────────────────────────────────
-class GlideFAB extends StatelessWidget {
+class GlideFAB extends StatefulWidget {
+  final bool isRideActive;
   final double size;
 
-  const GlideFAB({super.key, this.size = 56});
+  const GlideFAB({super.key, this.size = 56, this.isRideActive = false});
+
+  @override
+  State<GlideFAB> createState() => _GlideFABState();
+}
+
+class _GlideFABState extends State<GlideFAB> with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulse = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    if (widget.isRideActive) _pulse.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(GlideFAB old) {
+    super.didUpdateWidget(old);
+    if (widget.isRideActive && !_pulse.isAnimating) {
+      _pulse.repeat(reverse: true);
+    } else if (!widget.isRideActive && _pulse.isAnimating) {
+      _pulse.stop();
+      _pulse.value = 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: kAccent,
-        boxShadow: [
-          BoxShadow(color: kAccent.withValues(alpha: 0.20), blurRadius: 0, spreadRadius: 6),
-          BoxShadow(color: kAccent.withValues(alpha: 0.40), blurRadius: 18),
-          const BoxShadow(color: Color(0x1F000000), blurRadius: 10, offset: Offset(0, 4)),
-        ],
+    return AnimatedBuilder(
+      animation: _pulse,
+      builder: (context, child) {
+        final scale = widget.isRideActive ? 1.0 + _pulse.value * 0.08 : 1.0;
+        return Transform.scale(
+          scale: scale,
+          child: child,
+        );
+      },
+      child: Container(
+        width: widget.size,
+        height: widget.size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: kAccent,
+          boxShadow: [
+            BoxShadow(color: kAccent.withValues(alpha: 0.20), blurRadius: 0, spreadRadius: 6),
+            BoxShadow(color: kAccent.withValues(alpha: 0.40), blurRadius: 18),
+            const BoxShadow(color: Color(0x1F000000), blurRadius: 10, offset: Offset(0, 4)),
+          ],
+        ),
+        child: const Icon(Icons.local_taxi_rounded, color: kAccentInk, size: 26),
       ),
-      child: const Icon(Icons.local_taxi_rounded, color: kAccentInk, size: 26),
     );
   }
 }
@@ -105,6 +150,9 @@ class GlideTabBar extends StatelessWidget {
   final GlideTokens tokens;
   final VoidCallback? onHome;
   final VoidCallback? onSettings;
+  final VoidCallback? onTrips;
+  final VoidCallback? onChat;
+  final bool isRideActive;
 
   const GlideTabBar({
     super.key,
@@ -112,6 +160,9 @@ class GlideTabBar extends StatelessWidget {
     required this.tokens,
     this.onHome,
     this.onSettings,
+    this.onTrips,
+    this.onChat,
+    this.isRideActive = false,
   });
 
   @override
@@ -159,6 +210,7 @@ class GlideTabBar extends StatelessWidget {
                   label: 'Trips',
                   active: active == 'history',
                   tokens: tokens,
+                  onTap: onTrips,
                 ),
                 Expanded(flex: 6, child: const SizedBox()),
                 _TabItem(
@@ -166,6 +218,7 @@ class GlideTabBar extends StatelessWidget {
                   label: 'Chat',
                   active: active == 'chat',
                   tokens: tokens,
+                  onTap: onChat,
                 ),
                 _TabItem(
                   icon: Icons.settings_outlined,
@@ -178,7 +231,7 @@ class GlideTabBar extends StatelessWidget {
               ],
             ),
           ),
-          const Positioned(top: -28, child: GlideFAB()),
+          Positioned(top: -28, child: GlideFAB(isRideActive: isRideActive)),
         ],
       ),
     );
