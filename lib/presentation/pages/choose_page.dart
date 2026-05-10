@@ -324,7 +324,7 @@ class _RideTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '\$${ride.price.toStringAsFixed(2)}',
+                  '₦${ride.price.toStringAsFixed(2)}',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,

@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
                         Icon(LucideIcons.creditCard, color: t.ink, size: 18),
                         const SizedBox(width: 8),
                         Text(
-                          '\$29',
+                          '₦29',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,

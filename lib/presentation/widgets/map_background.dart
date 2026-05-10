@@ -1,5 +1,7 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/glide_tokens.dart';
 
 class MapBackground extends StatelessWidget {
@@ -8,136 +10,197 @@ class MapBackground extends StatelessWidget {
 
   const MapBackground({super.key, this.dark = false, this.route = false});
 
+  // Lagos, Nigeria – Lagos Island / Victoria Island area
+  static const _center    = LatLng(6.4420, 3.4080);
+  static const _pickup    = LatLng(6.4220, 3.3920);
+  static const _carPos    = LatLng(6.4360, 3.4040);
+  static const _dest      = LatLng(6.4600, 3.4260);
+  static const _userPos   = LatLng(6.4420, 3.4080);
+
+  static const _routePoints = [
+    LatLng(6.4220, 3.3920),
+    LatLng(6.4270, 3.3970),
+    LatLng(6.4310, 3.4010),
+    LatLng(6.4360, 3.4040),
+    LatLng(6.4440, 3.4130),
+    LatLng(6.4530, 3.4200),
+    LatLng(6.4600, 3.4260),
+  ];
+
+  // Scattered nearby cars for the home screen
+  static const _nearbyCars = [
+    LatLng(6.4460, 3.4010),
+    LatLng(6.4390, 3.4160),
+    LatLng(6.4480, 3.3960),
+    LatLng(6.4340, 3.4120),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: CustomPaint(
-        painter: _MapPainter(dark: dark, route: route),
+    final tileUrl = dark
+        ? 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+        : 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+
+    return FlutterMap(
+      key: ValueKey('map-$dark'),
+      options: MapOptions(
+        initialCenter: route ? const LatLng(6.4400, 3.4090) : _center,
+        initialZoom: route ? 13.8 : 14.2,
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.none,
+        ),
+      ),
+      children: [
+        TileLayer(
+          urlTemplate: tileUrl,
+          userAgentPackageName: 'com.example.ride_app',
+          maxNativeZoom: 19,
+          tileProvider: NetworkTileProvider(),
+        ),
+
+        if (!route) ...[
+          // Home screen: user location dot + nearby cars
+          MarkerLayer(markers: [
+            Marker(
+              point: _userPos,
+              width: 22,
+              height: 22,
+              child: _UserLocationMarker(),
+            ),
+            ..._nearbyCars.map((pos) => Marker(
+                  point: pos,
+                  width: 32,
+                  height: 32,
+                  child: _SmallCarMarker(),
+                )),
+          ]),
+        ],
+
+        if (route) ...[
+          PolylineLayer(polylines: [
+            // Halo
+            Polyline(
+              points: _routePoints,
+              strokeWidth: 18,
+              color: Colors.black.withValues(alpha: 0.09),
+            ),
+            // Main route line with white border highlight
+            Polyline(
+              points: _routePoints,
+              strokeWidth: 7,
+              color: kAccent,
+              borderStrokeWidth: 2,
+              borderColor: Colors.white.withValues(alpha: 0.4),
+              strokeCap: StrokeCap.round,
+              strokeJoin: StrokeJoin.round,
+            ),
+          ]),
+          MarkerLayer(markers: [
+            Marker(
+              point: _pickup,
+              width: 28,
+              height: 28,
+              child: _PickupMarker(),
+            ),
+            Marker(
+              point: _carPos,
+              width: 40,
+              height: 40,
+              child: _CarMarker(),
+            ),
+            Marker(
+              point: _dest,
+              width: 28,
+              height: 28,
+              child: _DestMarker(),
+            ),
+          ]),
+        ],
+      ],
+    );
+  }
+}
+
+class _UserLocationMarker extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: kAccent.withValues(alpha: 0.22),
+        border: Border.all(color: kAccent, width: 2),
+      ),
+      child: Center(
+        child: Container(
+          width: 8,
+          height: 8,
+          decoration: const BoxDecoration(shape: BoxShape.circle, color: kAccent),
+        ),
       ),
     );
   }
 }
 
-class _MapPainter extends CustomPainter {
-  final bool dark;
-  final bool route;
-
-  const _MapPainter({required this.dark, this.route = false});
-
+class _SmallCarMarker extends StatelessWidget {
   @override
-  void paint(Canvas canvas, Size size) {
-    final scaleX = size.width / 390;
-    final scaleY = size.height / 800;
-
-    canvas.save();
-    canvas.scale(scaleX, scaleY);
-
-    final base = dark ? const Color(0xFF0F1115) : const Color(0xFFEFEFE9);
-    final dot = dark ? const Color(0x0FFFFFFF) : const Color(0x0D000000);
-    final blk1 = dark ? const Color(0xFF13181A) : const Color(0xFFE7ECDF);
-    final blk2 = dark ? const Color(0xFF1A1814) : const Color(0xFFEFE9DC);
-    final blk3 = dark ? const Color(0xFF11181A) : const Color(0xFFE5EAE0);
-    final blk4 = dark ? const Color(0xFF1A1814) : const Color(0xFFEEE9DC);
-    final road = dark ? const Color(0xFF22262C) : const Color(0xFFFFFFFF);
-    final roadEdge = dark ? const Color(0x0AFFFFFF) : const Color(0x0F000000);
-    final minor = dark ? const Color(0xFF1B2024) : const Color(0xFFFFFFFF);
-    final label = dark ? const Color(0x4DDCDCDC) : const Color(0x72606067);
-
-    canvas.drawRect(
-      const Rect.fromLTWH(0, 0, 390, 800),
-      Paint()..color = base,
-    );
-
-    final dotPaint = Paint()..color = dot;
-    for (double x = 1; x < 390; x += 22) {
-      for (double y = 1; y < 800; y += 22) {
-        canvas.drawCircle(Offset(x, y), 0.8, dotPaint);
-      }
-    }
-
-    _fillRect(canvas, -20, 120, 180, 160, blk1, 0.7);
-    _fillRect(canvas, 220, 60, 220, 120, blk2, 0.55);
-    _fillRect(canvas, 240, 380, 200, 180, blk3, 0.55);
-    _fillRect(canvas, -20, 540, 200, 180, blk4, 0.55);
-
-    _drawRoads(canvas, Paint()
-      ..color = road
-      ..strokeWidth = 14
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke);
-
-    _drawRoads(canvas, Paint()
-      ..color = roadEdge
-      ..strokeWidth = 14.5
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke);
-
-    _drawMinorRoads(canvas, Paint()
-      ..color = minor.withValues(alpha: 0.9)
-      ..strokeWidth = 6
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke);
-
-    _drawLabel(canvas, 'VAN HOUTEN AVE', 200, 195, 2, label);
-    _drawLabel(canvas, 'SPRING ST', 200, 455, -2, label);
-    _drawLabel(canvas, 'MT PROSPECT', 106, 380, -89, label);
-    _drawLabel(canvas, 'CHESTNUT BLVD', 304, 380, 89, label);
-
-    if (route) {
-      final routePath = Path()
-        ..moveTo(110, 600)
-        ..quadraticBezierTo(200, 540, 200, 460)
-        ..quadraticBezierTo(200, 380, 290, 280);
-      canvas.drawPath(
-        routePath,
-        Paint()
-          ..color = kAccent
-          ..strokeWidth = 6
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-      );
-    }
-
-    canvas.restore();
-  }
-
-  void _fillRect(Canvas canvas, double x, double y, double w, double h, Color c, double opacity) {
-    canvas.drawRect(
-      Rect.fromLTWH(x, y, w, h),
-      Paint()..color = c.withValues(alpha: opacity),
-    );
-  }
-
-  void _drawRoads(Canvas canvas, Paint paint) {
-    canvas.drawLine(const Offset(-20, 180), const Offset(460, 220), paint);
-    canvas.drawLine(const Offset(-20, 480), const Offset(460, 460), paint);
-    canvas.drawLine(const Offset(120, -20), const Offset(100, 820), paint);
-    canvas.drawLine(const Offset(280, -20), const Offset(310, 820), paint);
-  }
-
-  void _drawMinorRoads(Canvas canvas, Paint paint) {
-    canvas.drawLine(const Offset(-20, 320), const Offset(460, 340), paint);
-    canvas.drawLine(const Offset(-20, 620), const Offset(460, 600), paint);
-    canvas.drawLine(const Offset(40, -20), const Offset(60, 820), paint);
-    canvas.drawLine(const Offset(200, -20), const Offset(210, 820), paint);
-    canvas.drawLine(const Offset(380, -20), const Offset(390, 820), paint);
-  }
-
-  void _drawLabel(Canvas canvas, String text, double x, double y, double deg, Color color) {
-    final tp = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: TextStyle(color: color, fontSize: 9, letterSpacing: 0.5),
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 4, offset: const Offset(0, 1)),
+        ],
       ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    canvas.save();
-    canvas.translate(x, y);
-    canvas.rotate(deg * pi / 180);
-    tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
-    canvas.restore();
+      child: const Icon(LucideIcons.carFront, size: 16, color: Color(0xFF1A1A1A)),
+    );
   }
+}
 
+class _PickupMarker extends StatelessWidget {
   @override
-  bool shouldRepaint(_MapPainter old) => old.dark != dark || old.route != route;
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: kAccent,
+        border: Border.all(color: Colors.white, width: 3),
+        boxShadow: [
+          BoxShadow(color: kAccent.withValues(alpha: 0.5), blurRadius: 8),
+        ],
+      ),
+    );
+  }
+}
+
+class _DestMarker extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: const Color(0xFF111111),
+        border: Border.all(color: Colors.white, width: 3),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 8),
+        ],
+      ),
+    );
+  }
+}
+
+class _CarMarker extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.20), blurRadius: 8, offset: const Offset(0, 2)),
+        ],
+      ),
+      child: const Icon(LucideIcons.carFront, size: 20, color: Color(0xFF111111)),
+    );
+  }
 }

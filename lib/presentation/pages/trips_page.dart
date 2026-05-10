@@ -133,7 +133,7 @@ class _TripsViewState extends State<_TripsView> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          '\$${thisMonthSpend.toStringAsFixed(2)}',
+                                          '₦${thisMonthSpend.toStringAsFixed(2)}',
                                           style: TextStyle(
                                             fontSize: 28, fontWeight: FontWeight.w800,
                                             color: t.ink, letterSpacing: -0.5,
@@ -267,7 +267,7 @@ class _TripRow extends StatelessWidget {
                           Text(
                             trip.destination,
                             style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w700,
+                              fontSize: 15, fontWeight: FontWeight.w500,
                               color: t.ink, letterSpacing: -0.2,
                             ),
                           ),
@@ -293,15 +293,15 @@ class _TripRow extends StatelessWidget {
                             child: Text(
                               'Cancelled',
                               style: TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.w700, color: t.cancelInk,
+                                fontSize: 11, fontWeight: FontWeight.w600, color: t.cancelInk,
                               ),
                             ),
                           )
                         else ...[
                           Text(
-                            '\$${trip.price.toStringAsFixed(2)}',
+                            '₦${trip.price.toStringAsFixed(2)}',
                             style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w700,
+                              fontSize: 15, fontWeight: FontWeight.w500,
                               color: t.ink, letterSpacing: -0.2,
                             ),
                           ),

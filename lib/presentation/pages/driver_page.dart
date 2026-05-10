@@ -242,7 +242,11 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                           ],
                         ),
                       ),
-                      GlideIconPill(icon: LucideIcons.messageCircle, tokens: t),
+                      GlideIconPill(
+                        icon: LucideIcons.messageCircle,
+                        tokens: t,
+                        onTap: () => appCubit.goToChat('c1'),
+                      ),
                       const SizedBox(width: 8),
                       GlideIconPill(
                         icon: LucideIcons.phone,
@@ -250,6 +254,11 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                         bgColor: t.accent,
                         iconColor: t.accentInk,
                         iconSize: 18,
+                        onTap: () => appCubit.goToCall(
+                          conversationId: 'c1',
+                          driverName: driver?.name ?? 'Joe Smith',
+                          driverHue: driver?.avatarHue ?? 42,
+                        ),
                       ),
                     ],
                   ),
@@ -315,36 +324,42 @@ class _DriverViewState extends State<_DriverView> with SingleTickerProviderState
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      TapScale(
-                        onTap: () => showSafetySheet(context, t),
-                        child: _MiniButtonContent(
-                          icon: LucideIcons.shieldCheck,
-                          label: 'Safety',
-                          tokens: t,
+                      Expanded(
+                        child: TapScale(
+                          onTap: () => showSafetySheet(context, t),
+                          child: _MiniButtonContent(
+                            icon: LucideIcons.shieldCheck,
+                            label: 'Safety',
+                            tokens: t,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
-                      TapScale(
-                        onTap: () {
-                          Clipboard.setData(const ClipboardData(
-                            text: 'https://glide.app/track/abc123',
-                          ));
-                          showGlideToast(context, 'Trip link copied', t);
-                        },
-                        child: _MiniButtonContent(
-                          icon: LucideIcons.share2,
-                          label: 'Share trip',
-                          tokens: t,
+                      Expanded(
+                        child: TapScale(
+                          onTap: () {
+                            Clipboard.setData(const ClipboardData(
+                              text: 'https://glide.app/track/abc123',
+                            ));
+                            showGlideToast(context, 'Trip link copied', t);
+                          },
+                          child: _MiniButtonContent(
+                            icon: LucideIcons.share2,
+                            label: 'Share trip',
+                            tokens: t,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
-                      TapScale(
-                        onTap: () => appCubit.goTo(AppScreen.home),
-                        child: _MiniButtonContent(
-                          icon: LucideIcons.x,
-                          label: 'Cancel',
-                          tokens: t,
-                          isCancel: true,
+                      Expanded(
+                        child: TapScale(
+                          onTap: () => appCubit.goTo(AppScreen.home),
+                          child: _MiniButtonContent(
+                            icon: LucideIcons.x,
+                            label: 'Cancel',
+                            tokens: t,
+                            isCancel: true,
+                          ),
                         ),
                       ),
                     ],
@@ -375,29 +390,27 @@ class _MiniButtonContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = tokens;
-    return Expanded(
-      child: Container(
-        height: 44,
-        decoration: BoxDecoration(
-          color: isCancel ? t.cancelBg : t.card,
-          borderRadius: BorderRadius.circular(14),
-          border: isCancel ? null : Border.all(color: t.hair, width: 1),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: isCancel ? t.cancelInk : t.ink, size: 16),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                color: isCancel ? t.cancelInk : t.ink,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
+    return Container(
+      height: 44,
+      decoration: BoxDecoration(
+        color: isCancel ? t.cancelBg : t.card,
+        borderRadius: BorderRadius.circular(14),
+        border: isCancel ? null : Border.all(color: t.hair, width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: isCancel ? t.cancelInk : t.ink, size: 16),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: isCancel ? t.cancelInk : t.ink,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

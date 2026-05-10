@@ -6,6 +6,7 @@ import '../../injection_container.dart' as di;
 import '../cubits/app_cubit.dart';
 import '../cubits/chat_cubit.dart';
 import '../pages/account_page.dart';
+import '../pages/call_page.dart';
 import '../pages/chat_inbox_page.dart';
 import '../pages/chat_thread_page.dart';
 import '../pages/choose_page.dart';
@@ -40,9 +41,12 @@ class GlideFlow extends StatelessWidget {
             ),
           AppScreen.chatThread => BlocProvider(
               key: ValueKey('chatThread-${state.activeConversationId}'),
-              create: (_) => di.sl<ChatCubit>()..loadMessages(state.activeConversationId ?? ''),
+              create: (_) => di.sl<ChatCubit>()
+                ..loadConversations()
+                ..loadMessages(state.activeConversationId ?? ''),
               child: const ChatThreadPage(),
             ),
+          AppScreen.call => const CallPage(key: ValueKey('call')),
           AppScreen.home => const HomePage(key: ValueKey('home')),
         };
 

@@ -76,7 +76,7 @@ class _TopUpSheetState extends State<_TopUpSheet> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      '£${_amounts[i]}',
+                      '₦${_amounts[i]}',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
@@ -94,7 +94,7 @@ class _TopUpSheetState extends State<_TopUpSheet> {
             onTap: () {
               final amount = _amounts[_selectedIndex];
               Navigator.of(context).pop();
-              showGlideToast(context, '£$amount added to your wallet ✓', t);
+              showGlideToast(context, '₦$amount added to your wallet ✓', t);
             },
             child: Container(
               height: 52,

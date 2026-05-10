@@ -91,7 +91,16 @@ class _ChatThreadPageState extends State<ChatThreadPage> {
                   bgColor: t.accent,
                   iconColor: t.accentInk,
                   iconSize: 18,
-                  onTap: () => HapticFeedback.mediumImpact(),
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    if (conv != null) {
+                      context.read<AppCubit>().goToCall(
+                            conversationId: conv.id,
+                            driverName: conv.driverName,
+                            driverHue: conv.driverAvatarHue,
+                          );
+                    }
+                  },
                 ),
               ],
             ),

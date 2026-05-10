@@ -156,8 +156,8 @@ class _AccountView extends StatelessWidget {
                                   ),
                                   Text(
                                     profile != null
-                                        ? '\$${profile.walletBalance.toStringAsFixed(2)}'
-                                        : '\$29.00',
+                                        ? '₦${profile.walletBalance.toStringAsFixed(2)}'
+                                        : '₦29.00',
                                     style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w800,
@@ -261,7 +261,11 @@ class _AccountView extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              _AccentToggle(value: true, tokens: t),
+                              _AccentToggle(
+                                value: appState.discountNotifications,
+                                tokens: t,
+                                onChanged: appCubit.toggleDiscountNotifications,
+                              ),
                             ],
                           ),
                         ),
